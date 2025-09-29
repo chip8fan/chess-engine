@@ -4,7 +4,7 @@ import chess
 import engine
 import chess.engine
 font_size = 16
-time_limit = 10
+time_limit = 1
 screen_size = 512, 512+(font_size*2)
 piece_size = (64, 64)
 pygame.init()
@@ -28,10 +28,11 @@ black_queen = pygame.transform.scale(pygame.image.load("svg/bQ.svg"), piece_size
 black_king = pygame.transform.scale(pygame.image.load("svg/bK.svg"), piece_size)
 font = pygame.font.SysFont('Arial', font_size)
 running = True
-chess_engine = engine.Engine()
+chess_engine = engine.Stockfish()
 stockfish = chess.engine.SimpleEngine.popen_uci("/opt/homebrew/bin/stockfish")
 elo = 1350
 stockfish.configure({'UCI_Elo': elo})
+stockfish.configure({'UCI_LimitStrength': True})
 while running:
     screen.fill("white")
     screen.blit(font.render(f'Stockfish {elo}', True, 'black'), (0, 0))
@@ -73,7 +74,8 @@ while running:
     pygame.display.flip()
     if board.is_game_over() == False and board.can_claim_draw() == False:
         if board.turn == chess.WHITE:
-            board.push_uci(chess_engine.search(board, time_limit))
+            #board.push_uci(chess_engine.search(board, time_limit))
+            board.push(chess_engine.play(board, time_limit/len(list(board.legal_moves)), 50))
         elif board.turn == chess.BLACK:
             board.push(stockfish.play(board, chess.engine.Limit(time=time_limit)).move)
     else:
