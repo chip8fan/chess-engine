@@ -39,22 +39,21 @@ class Engine():
             if score > max:
                 max = score
         return max
-    def search(self, board: chess.Board, max_time: float): # root negamax function
+    def play(self, board: chess.Board, max_time: float): # root negamax function
         color = None
         current_depth = 1
         if board.turn == chess.WHITE:
             color = 1
         elif board.turn == chess.BLACK:
             color = -1
-        legal_moves = [move.uci() for move in board.legal_moves]
         start = time.time()
         lists = []
         break_flag = False
         while True:
             best_moves = []
             max_score = -sys.maxsize
-            for move in legal_moves:
-                board.push_uci(move)
+            for move in board.legal_moves:
+                board.push(move)
                 score = self.negamax(board, current_depth, color, start, max_time)
                 if score is not None:
                     if score > max_score:
