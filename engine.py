@@ -157,9 +157,11 @@ class Stockfish():
     def play(self, board: chess.Board, max_time: float):
         self.engine = chess.engine.SimpleEngine.popen_uci("/opt/homebrew/bin/stockfish")
         self.move = self.engine.play(board, chess.engine.Limit(time=max_time)).move
+        self.engine.quit()
         return self.move
 class LeelaChessZero():
     def play(self, board: chess.Board, max_time: float):
         self.engine = chess.engine.SimpleEngine.popen_uci("/opt/homebrew/bin/lc0")
         self.move = self.engine.play(board, chess.engine.Limit(time=max_time)).move
+        self.engine.quit()
         return self.move
